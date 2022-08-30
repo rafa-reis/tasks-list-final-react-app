@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
-import AddIcon from '@mui/icons-material/Add';
+import AddTaskIcon from '@mui/icons-material/AddTask';
 import CustomButton from './CustomButton';
 import ModalTarefas from './ModalTarefas';
 
@@ -44,10 +44,10 @@ const TarefasHeader: React.FC<TarefasHeaderProps> = ({ title, showInput }) => {
           )}
 
           <CustomButton
-            color="secondary"
-            title="Nova Tarefa"
+            color="primary"
+            title="Adicionar Tarefa"
             onClick={handleOpen}
-            icon={<AddIcon />}
+            icon={<AddTaskIcon />}
           />
 
           {/* <FuseDialog /> */}

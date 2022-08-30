@@ -26,17 +26,9 @@ const TarefasContent: React.FC = () => {
 
   return (
     <>
-      <Grid container spacing={2} className="p-20">
+      <Grid container spacing={2} className="flex flex-row items-center justify-center p-20">
         {auxTarefas.map((tarefa: ITarefa) => (
-          <Grid
-            item
-            key={tarefa.id}
-            xs={12}
-            sm={6}
-            md={4}
-            lg={4}
-            className="flex flex-row items-center justify-center"
-          >
+          <Grid item key={tarefa.id} xs={12} sm={6} md={4} lg={4}>
             <CardTarefa id={tarefa.id} description={tarefa.description} detail={tarefa.detail} />
           </Grid>
         ))}

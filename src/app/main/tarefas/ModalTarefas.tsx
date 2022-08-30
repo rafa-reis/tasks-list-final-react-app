@@ -117,10 +117,14 @@ const ModalTarefas: React.FC<DialogProps> = ({ openModal, closeModal, tarefaID }
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeModal} autoFocus>
+          <Button onClick={closeModal} variant="contained" color="warning">
             Cancelar
           </Button>
-          <Button onClick={modoEditar ? handleAtualizar : handleSave} variant="contained">
+          <Button
+            onClick={modoEditar ? handleAtualizar : handleSave}
+            variant="contained"
+            color="secondary"
+          >
             Salvar
           </Button>
         </DialogActions>
