@@ -16,28 +16,44 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     jwtService.on('onAutoLogin', () => {
-      dispatch(showMessage({ message: 'Signing in with JWT' }));
+      dispatch(showMessage({ message: 'Login automático utilizando JWT' }));
 
       /**
        * Sign in and retrieve user data with stored token
        */
-      const response = jwtService.signInWithToken();
+      const response = jwtService.signInWithToken(); // ok: true ou ok: false
       if (response.ok) {
-        success(response.userLogged, 'Signed in with JWT');
+        // { name: '', email: '', token: ''}
+        success(response.userLogged, 'Login automático realizado com sucesso!');
       } else {
         pass(response.error);
       }
     });
 
-    jwtService.on('onLogin', (user) => {
-      success(user, 'Signed in');
-      history.push({
-        pathname: '/sign-in',
-      });
+    jwtService.on('onLogin', (newUser) => {
+      newUser.signUp = false;
+      success(newUser, `Bem-vindo(a) ${newUser.name}!`);
+    });
+
+    jwtService.on('onSignUp', (newUser, sucesso) => {
+      if (sucesso) {
+        newUser.signUp = true;
+        success(newUser, 'Conta criada com sucesso! Você será redirecionado automaticamente');
+
+        // parecido com o window.location.href = '/sign-in'
+        setTimeout(() => {
+          history.push({
+            pathname: '/sign-in',
+          });
+        }, 1000);
+      } else {
+        newUser.signUp = true;
+        success(newUser, 'Conta já existe!Verifique e tente novamente');
+      }
     });
 
     jwtService.on('onLogout', () => {
-      pass('Signed out');
+      pass('Logout realizado');
 
       dispatch(logoutUser());
     });
@@ -46,6 +62,18 @@ function AuthProvider({ children }) {
       pass(message);
 
       dispatch(logoutUser());
+    });
+
+    jwtService.on('onPasswordIncorrect', (message) => {
+      pass(message);
+    });
+
+    jwtService.on('onUserNotFound', (message) => {
+      pass(message);
+    });
+
+    jwtService.on('onServerError', (message) => {
+      pass(message);
     });
 
     jwtService.on('onNoAccessToken', () => {
@@ -62,8 +90,16 @@ function AuthProvider({ children }) {
         dispatch(showMessage({ message }));
       }
 
+      if (user.signUp) {
+        setWaitAuthCheck(false);
+        setIsAuthenticated(false);
+        return;
+      }
+
       Promise.all([
+        // aqui dispara a ação de setUser da store de user
         dispatch(setUser(user)),
+        // user => { id: '', name: '', email: '', token: '' }
         // You can receive data in here before app initialization
       ]).then((values) => {
         setWaitAuthCheck(false);
